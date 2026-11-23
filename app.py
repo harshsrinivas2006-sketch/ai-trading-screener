@@ -12,6 +12,27 @@ st.set_page_config(page_title="Indian Trading Scanner", layout="wide")
 st.title("🇮🇳 Indian Stock Trading Scanner")
 st.caption("NSE + BSE | Intraday + Swing | Technical screening")
 
+st.subheader("🔧 Data Connection Test")
+
+if st.button("Test Yahoo Finance Connection"):
+    try:
+        test_data = yf.Ticker("RELIANCE.NS").history(
+            period="5d",
+            interval="1d"
+        )
+
+        if test_data.empty:
+            st.error("Yahoo Finance returned no stock data.")
+        else:
+            st.success("Yahoo Finance connection is working!")
+            st.write("Rows received:", len(test_data))
+            st.write("Latest closing price:", test_data["Close"].iloc[-1])
+            st.dataframe(test_data.tail())
+
+    except Exception as e:
+        st.error(f"Data connection failed: {str(e)}")
+
+
 # ---------------- SETTINGS ----------------
 
 @st.cache_data(ttl=3600)
